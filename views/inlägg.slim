@@ -1,7 +1,17 @@
-form action="objects" method="POST" 
+form action="../objects" method="POST" 
     input type="text" name="name" placeholder="Enter object name"
     input type="text" name="quantity" placeholder="Enter object quantity"
-    input type="text" name="class" placeholder="Objectklass.. OBS SKA FIXA DROPDOWN"
-    input type="text" name="status" placeholder="Objectstatus.. OBS SKA FIXA DROPDOWN"
+    / input type="text" name="class" placeholder="Objectklass.. OBS SKA FIXA DROPDOWN"
+    select name="class"
+        option value="Övrigt" Övrigt 
+        option value="Maskin" Maskin 
+        option value="Elektronik" Elektronik
+        option value="Verktyg" Verktyg
+    / input type="text" name="status" placeholder="Objectstatus.. OBS SKA FIXA DROPDOWN"
+    select name="status"
+        option value="Tillgänglig" Tillgänglig
+        option value="Borttappad" Borttappad
+        option value="Används" Används
+        option value="Okänd" Okänd
     input type="text" name="author" value="SÄTT IN ANVÄNDARE HÄR"
     input type="submit" value="Lägg till objekt"
