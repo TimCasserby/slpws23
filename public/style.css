@@ -1,0 +1,34 @@
+*{
+    box-sizing: border-box;
+    color: black;
+}
+
+.object{
+    display: flex;
+    flex-direction: column; 
+    background-color: rgb(112, 112, 112);
+    border: 2px solid black;
+    border-radius: 4px;
+    width: 500px;
+    margin-bottom: 10px;
+}
+
+p{
+    margin-bottom: 15px;
+    height: 0px;
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+.objecttitle{
+    height: 0px;
+    margin-left: 5px;
+    margin-bottom: 25px;
+    margin-top: 5px;
+    font-size: 30px;
+}
+
+.removebutton{
+    display: flex;
+    justify-content: right;
+}
