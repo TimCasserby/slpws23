@@ -1,0 +1,18 @@
+/ link rel="stylesheet" href="/style.css"/
+h2 DETAIL VIEW 
+
+div class="objectdetailview"
+    h3 class="objecttitle" #{objectinfo[0]["name"]}
+    p = "Mängd: #{objectinfo[0]["quantity"]}"
+    p = "Status: #{objectinfo[0]["status"]}"
+    p = "Skapare: #{objectinfo[0]["author"]}"
+    p = "Objecttyp: #{objectinfo[0]["class"]} "
+
+
+    form action="delete" method="POST" class="removebutton"
+        input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
+        input type="submit" value="Delete" class="crud_button"
+    div class="editbutton"
+        a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
+
+/ - objectinfo.each do |object|

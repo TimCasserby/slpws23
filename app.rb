@@ -5,7 +5,7 @@ require 'bcrypt'
 require 'sinatra/reloader'
 
 get('/') do
-    redirect("objects/index")
+    redirect("objects/")
 end
 
 get('/verktyg') do
@@ -20,7 +20,7 @@ get('/elektronik') do
     slim(:elektronik)
 end
 
-get('/objects/index') do #DETTA FÖLJER INTE RESTFUL
+get('/objects/') do 
     db = SQLite3::Database.new('db/database.db')
     db.results_as_hash = true
     objectlistfetch = db.execute("SELECT * FROM objects") # WHERE user_id = ?",id
@@ -29,7 +29,7 @@ get('/objects/index') do #DETTA FÖLJER INTE RESTFUL
 end
 
 get('/objects/new') do
-    slim(:add_item)
+    slim(:"objects/new")
 end
 
 get('/objects/:id/') do
@@ -38,7 +38,7 @@ get('/objects/:id/') do
     db.results_as_hash = true
     objectfetch = db.execute("SELECT * FROM objects WHERE id = ?", objectid)
     p objectfetch
-    slim(:"objects/object_detailview", locals:{objectinfo:objectfetch})
+    slim(:"objects/show", locals:{objectinfo:objectfetch})
 end
 
 
@@ -51,5 +51,14 @@ post('/objects') do
     db = SQLite3::Database.new('db/database.db')
     db.execute('INSERT INTO objects (name, quantity, class, status, author) VALUES (?,?,?,?,?)',objectname, objectquantity, objectclass, objectstatus, objectauthor)
     redirect("../objects/new")
+
+end
+
+post('/objects/:id/delete') do
+    objectid = params[:objectid]
+    # id = session[:id].to_i
+    db = SQLite3::Database.new('db/database.db')
+    db.execute("DELETE FROM objects WHERE id='#{objectid}'")
+    redirect("/objects/")
 
 end
