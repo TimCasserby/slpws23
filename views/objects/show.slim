@@ -1,18 +1,31 @@
 / link rel="stylesheet" href="/style.css"/
 h2 DETAIL VIEW 
+div id="detailpagecontainer"
+    div class="objectdetailview"
+        h3 class="objecttitle" #{objectinfo[0]["name"]}
+        p = "Mängd: #{objectinfo[0]["quantity"]}"
+        p = "Status: #{objectinfo[0]["status"]}"
+        p = "Skapare: #{objectinfo[0]["author"]}"
+        p = "Objecttyp: #{objectinfo[0]["class"]} "
 
-div class="objectdetailview"
-    h3 class="objecttitle" #{objectinfo[0]["name"]}
-    p = "Mängd: #{objectinfo[0]["quantity"]}"
-    p = "Status: #{objectinfo[0]["status"]}"
-    p = "Skapare: #{objectinfo[0]["author"]}"
-    p = "Objecttyp: #{objectinfo[0]["class"]} "
 
+        form action="delete" method="POST" class="removebutton"
+            input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
+            input type="submit" value="Delete" class="crud_button"
+        div class="editbutton"
+            a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
 
-    form action="delete" method="POST" class="removebutton"
-        input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
-        input type="submit" value="Delete" class="crud_button"
-    div class="editbutton"
-        a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
+    div id="commentssection"
+        h2 KOMMENTARER
+        - comments.each do |comment|
+            div class="comment"
+                p class="commenttext" = "- #{comment["text"]}"
+                / p = "Av: #{comment["author_id"]}" #FIXA SÅ DEN SKRIVER ANVÄNDARNAMN
+                p = "Datum: #{comment["date"]}"
+        form action="newcomment" method="POST" class="commentform"
+            input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
+            input type="number" name="authorid" value="1"
+            input type="text" name="commenttext" placeholder="Skriv din kommentar här!" class="commenttextbox"
+            input type="submit" value="Post"
 
-/ - objectinfo.each do |object|
+    / - objectinfo.each do |object|

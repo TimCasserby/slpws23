@@ -1,0 +1,25 @@
+h2 DETAIL VIEW 
+div id="detailpagecontainer"
+    div class="objectdetailview"
+        h3 class="objecttitle" #{objectinfo[0]["name"]}
+        form action="edit" method="POST" 
+            p = "Mängd:" 
+            input type="number" name="quantity" value="#{objectinfo[0]["quantity"]}" class="editbox"
+            p = "Status: (Nuvarande #{objectinfo[0]["status"]})"
+            select name="status" value="#{objectinfo[0]["status"]}" class="editbox"
+                option value="Tillgänglig" Tillgänglig
+                option value="Borttappad" Borttappad
+                option value="Används" Används
+                option value="Okänd" Okänd
+            p = "Skapare: #{objectinfo[0]["author"]}"
+            p = "Objecttyp: (Nuvarande #{objectinfo[0]["class"]})"
+            select name="class" value="#{objectinfo[0]["class"]}" class="editbox"
+                option value="Övrigt" Övrigt 
+                option value="Maskin" Maskin 
+                option value="Elektronik" Elektronik
+                option value="Verktyg" Verktyg
+
+
+        
+        div class="editbutton"
+            a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
