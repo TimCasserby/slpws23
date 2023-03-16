@@ -2,6 +2,8 @@
 h2 DATABASE 
 
 h3 Välkommen till databasen!
+- i = 0
+
 
 div class="objectscontainer"
     - objectlist.each do |object|
@@ -11,6 +13,11 @@ div class="objectscontainer"
             p = "Status: #{object["status"]}"
             p = "Skapare: #{object["author"]}"
             p = "Objecttyp: #{object["class"]} "
+            - comments.each do |comment|
+                - if comment["object_id"] == object["id"]
+                    - i += 1
+            p class="commentsamount" = "Kommentarer: #{i}"
+            - i = 0
 
 
         / form action="removeobject" method="POST" class="removebutton"

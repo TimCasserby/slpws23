@@ -2,7 +2,8 @@ h2 DETAIL VIEW
 div id="detailpagecontainer"
     div class="objectdetailview"
         h3 class="objecttitle" #{objectinfo[0]["name"]}
-        form action="edit" method="POST" 
+        /objects/#{objectinfo[0]["id"]}/update
+        form action="/objects/#{objectinfo[0]["id"]}/update" method="POST"
             p = "Mängd:" 
             input type="number" name="quantity" value="#{objectinfo[0]["quantity"]}" class="editbox"
             p = "Status: (Nuvarande #{objectinfo[0]["status"]})"
@@ -18,8 +19,4 @@ div id="detailpagecontainer"
                 option value="Maskin" Maskin 
                 option value="Elektronik" Elektronik
                 option value="Verktyg" Verktyg
-
-
-        
-        div class="editbutton"
-            a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
+            input type="submit" value="EDIT" class="crud_button"

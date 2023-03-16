@@ -25,8 +25,10 @@ get('/objects/') do
     db = SQLite3::Database.new('db/database.db')
     db.results_as_hash = true
     objectlistfetch = db.execute("SELECT * FROM objects") # WHERE user_id = ?",id
+    commentsfetch = db.execute("SELECT * FROM comments")
+
     p "Alla: #{objectlistfetch}"
-    slim(:"objects/index", locals:{objectlist:objectlistfetch})
+    slim(:"objects/index", locals:{objectlist:objectlistfetch,comments:commentsfetch})
 end
 
 get('/objects/new') do
@@ -39,6 +41,16 @@ get('/objects/:id/edit') do
     db.results_as_hash = true
     objectfetch = db.execute("SELECT * FROM objects WHERE id = ?", objectid)
     slim(:"objects/edit", locals:{objectinfo:objectfetch})
+end
+
+post('/objects/:id/update') do
+    objectid = params[:id].to_i
+    status = params[:status]
+    quantity = params[:quantity].to_i
+    objectclass = params[:class]
+    db = SQLite3::Database.new('db/database.db')
+    db.execute("UPDATE objects SET quantity = ?, status = '?', class = '?' WHERE id = ?", quantity, status, objectclass, objectid)
+    redirect("/objects/#{objectid}/")
 end
 
 get('/objects/:id/') do
@@ -61,7 +73,7 @@ post('/objects') do
     objectauthor = params[:author]
     db = SQLite3::Database.new('db/database.db')
     db.execute('INSERT INTO objects (name, quantity, class, status, author) VALUES (?,?,?,?,?)',objectname, objectquantity, objectclass, objectstatus, objectauthor)
-    redirect("../objects/new")
+    redirect("/objects/new")
 
 end
 
@@ -71,6 +83,15 @@ post('/objects/:id/delete') do
     db = SQLite3::Database.new('db/database.db')
     db.execute("DELETE FROM objects WHERE id='#{objectid}'")
     redirect("/objects/")
+
+end
+
+post('/objects/:id/deletecomment') do
+    objectid = params[:id]
+    comment_id = params[:commentid]
+    db = SQLite3::Database.new('db/database.db')
+    db.execute("DELETE FROM comments WHERE comment_id='#{comment_id}'")
+    redirect("/objects/#{objectid}/")
 
 end
 
@@ -84,6 +105,6 @@ post('/objects/:id/newcomment') do
     date = date.strftime "%d/%m/%Y %H:%M"
     db = SQLite3::Database.new('db/database.db')
     db.execute('INSERT INTO comments (object_id, author_id, text, date) VALUES (?,?,?,?)',objectid, authorid, commenttext, date)
-    redirect("../objects/#{objectid}/")
+    redirect("/objects/#{objectid}/")
 
 end
