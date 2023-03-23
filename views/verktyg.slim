@@ -1,3 +1,25 @@
+/ link rel="stylesheet" href="/style.css"/
 h2 DATABASE 
 
-h3 Välkommen till verktyg!
+h3 Välkommen till databasen för verktyg!
+- i = 0
+
+
+div class="objectscontainer"
+    - objectlist.each do |object|
+        div class="object"
+            a href="/objects/#{object["id"]}/" class="objecttitle" #{object["name"]} 
+            p = "Mängd: #{object["quantity"]}"
+            p = "Status: #{object["status"]}"
+            p = "Skapare: #{object["author"]}"
+            p = "Objecttyp: #{object["class"]} "
+            - comments.each do |comment|
+                - if comment["object_id"] == object["id"]
+                    - i += 1
+            p class="commentsamount" = "Kommentarer: #{i}"
+            - i = 0
+
+
+        / form action="removeobject" method="POST" class="removebutton"
+        /     input type="hidden" name="objectid" value="#{object["id"]}"
+        /     input type="submit" value="Delete"

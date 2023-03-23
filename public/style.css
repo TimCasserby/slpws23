@@ -6,7 +6,7 @@
 .object{
     display: flex;
     flex-direction: column; 
-    background-color: rgb(112, 112, 112);
+    background-color: rgb(167, 167, 167);
     border: 2px solid black;
     border-radius: 4px;
     width: 30vw;
@@ -18,7 +18,7 @@
 .objectdetailview{
     display: flex;
     flex-direction: column; 
-    background-color: rgb(112, 112, 112);
+    background-color: rgb(167, 167, 167);
     border: 2px solid black;
     border-radius: 4px;
     width: 30vw;
@@ -91,7 +91,7 @@ p{
     margin-left: 15px;
     height: auto;
     width: 60vw;
-    background-color: rgb(112, 112, 112);
+    background-color: rgb(167, 167, 167);
     border: 2px solid black;
     border-radius: 4px;
 }
