@@ -149,3 +149,12 @@ p{
     justify-content: right;
     /* background-color: red; */
 }
+
+#usernav{
+    display: flex;
+    justify-content: right;
+}
+
+#logoutbutton{
+    background-color: rgb(190, 48, 48);
+}

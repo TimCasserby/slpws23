@@ -20,8 +20,7 @@ div id="detailpagecontainer"
         - comments.each do |comment|
             div class="comment"
                 p class="commenttext" = "- #{comment["text"]}"
-                / p = "Av: #{comment["author_id"]}" #FIXA SÅ DEN SKRIVER ANVÄNDARNAMN
-                p = "Datum: #{comment["date"]}"
+                p = "Användare: #{comment["name"]} // Datum: #{comment["date"]}"
                 form action="deletecomment" method="POST" class="removecommentbutton"
                     input type="hidden" name="commentid" value="#{comment["comment_id"]}"
                     input type="submit" value="Delete" class="crud_button"

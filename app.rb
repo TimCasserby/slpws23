@@ -47,17 +47,23 @@ get('/objects/') do
     db.results_as_hash = true
     objectlistfetch = db.execute("SELECT * FROM objects") # WHERE user_id = ?",id
     commentsfetch = db.execute("SELECT * FROM comments")
+    # loggedinid = session[:id]
     loggedinusername = session[:loggedinusername]
-    p "Username is"
-    p loggedinusername
-    p session[:loggedinusername]
 
     #p "Alla: #{objectlistfetch}"
     slim(:"objects/index", locals:{objectlist:objectlistfetch,comments:commentsfetch,username:loggedinusername})
 end
 
 get('/objects/new') do
-    slim(:"objects/new")
+    if session[:isadmin] != nil
+        if session[:isadmin] == true
+            slim(:"objects/new")
+        else
+            "Du är inte admin! Hacka inte min sida tack."
+        end
+    else
+        "Du är inte inloggad!"
+    end
 end
 
 get('/objects/:id/edit') do
@@ -83,8 +89,8 @@ get('/objects/:id/') do
     db = SQLite3::Database.new('db/database.db')
     db.results_as_hash = true
     objectfetch = db.execute("SELECT * FROM objects WHERE id = ?", objectid)
-    commentsfetch = db.execute("SELECT * FROM comments WHERE object_id = ?", objectid)
-    p objectfetch
+    commentsfetch = db.execute("SELECT * FROM comments INNER JOIN users on users.id = comments.author_id WHERE object_id = ?", objectid)
+    p "UNDER"
     p commentsfetch
     slim(:"objects/show", locals:{objectinfo:objectfetch,comments:commentsfetch})
 end
@@ -120,12 +126,20 @@ post('/objects/:id/deletecomment') do
 
 end
 
+get('/logout') do
+    session.clear
+    redirect('/objects/')
+end
+
 
 
 post('/objects/:id/newcomment') do
     commenttext = params[:commenttext]
     authorid = params[:authorid]
     objectid = params[:objectid]
+    if session[:isadmin] == nil
+        raise("Du får bara lägga till kommentarer om du är inloggad.")
+    end
     date = DateTime.now #VI FIXAR DETTA SEN
     date = date.strftime "%d/%m/%Y %H:%M"
     db = SQLite3::Database.new('db/database.db')
@@ -155,6 +169,15 @@ post('/login') do
         p loggedinusername
         p session[:loggedinusername] #RETURNAR RÄTT USERNAME
 
+        admin = false
+        if result != nil
+            if result["rank"] == 2
+                admin = true
+            end
+        end
+
+        session[:isadmin] = admin
+
         redirect("/objects/")
         p "DU FICK RÄTT LÖSENORD"
     else
@@ -164,11 +187,22 @@ post('/login') do
   end
 
   get('/register') do
-    slim(:register)
+    if session[:isadmin] != nil
+        if session[:isadmin] == true
+            slim(:register)
+        else
+            "Du är inte admin! Hacka inte min sida tack."
+        end
+    else
+        "Du är inte inloggad!"
+    end
   end
 
   
 post('/users/new') do
+    if session[:isadmin] != true
+        raise("HACKING ATTEMPT?")
+    end
     username = params[:username]
     password = params[:password]
     password_confirm = params[:password_confirm]
