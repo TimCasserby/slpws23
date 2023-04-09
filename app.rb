@@ -243,19 +243,20 @@ get('/login') do
     slim(:login)
 end
 
-# Authenticate a user and log them in
-#
-# @param [String] :username The username to authenticate
-# @param [String] :password The password to authenticate
-# @return [redirect] Redirect to the objects page
+# Handles the user authentication for logging in to the system.
+# 
+# @param [String] username The username of the user attempting to log in
+# @param [String] password The password of the user attempting to log in
+# @return [String] A message indicating the result of the login attempt
+# @raise [RuntimeError] If an error occurs during the login process
 post('/login') do
-    # JAG SKA KOMPLETTERA MED EN COOLDOWN
     username = params[:username]
     password = params[:password]
     result = model.get_user_by_name(username)
 
     last_login = model.last_login_attempt(username)
     if last_login == nil || Time.now - Time.parse(last_login['timestamp']) > 10
+        # If you haven't already tried logging in the last 10 seconds to that account
         if result != nil
             pwdigest = result["encryptedpassword"]
             id = result["id"]
@@ -279,14 +280,16 @@ post('/login') do
 
                 redirect("/objects/")
             else
-                # "FEL LÖSENORD!"
+                # Wrong password
                 model.record_login_attempt(username)
                 redirect("/login")
             end
         else
+            # No user with that name exists
             "Fel användarnamn."
         end
     elsif Time.now - Time.parse(last_login['timestamp']) < 10
+        # If the user already has had a login attempt the last 10 seconds
         puts "Last login timestamp: #{Time.now - Time.parse(last_login['timestamp'])}"
         model.record_login_attempt(username)
         "Chilla gunilla. Du kan bara försöka logga in en gång var tioende sekund."
