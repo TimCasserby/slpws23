@@ -2,18 +2,19 @@
 h2 DETAIL VIEW 
 div id="detailpagecontainer"
     div class="objectdetailview"
-        h3 class="objecttitle" #{objectinfo[0]["name"]}
-        p = "Mängd: #{objectinfo[0]["quantity"]}"
-        p = "Status: #{objectinfo[0]["status"]}"
-        p = "Skapare: #{objectinfo[0]["author"]}"
-        p = "Objecttyp: #{objectinfo[0]["class"]} "
+        h3 class="objecttitle" #{objectinfo["name"]}
+        p = "Mängd: #{objectinfo["quantity"]}"
+        p = "Status: #{objectinfo["status"]}"
+        p = "Skapare: #{objectinfo["author"]}"
+        p = "Objecttyp: #{objectinfo["class"]} "
 
-
-        form action="delete" method="POST" class="removebutton"
-            input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
-            input type="submit" value="Delete" class="crud_button"
-        div class="editbutton"
-            a href="/objects/#{objectinfo[0]["id"]}/edit" class="crud_button" EDIT
+        - if session[:isadmin] != nil 
+                - if session[:isadmin] == true 
+                    form action="delete" method="POST" class="removebutton"
+                        input type="hidden" name="objectid" value="#{objectinfo["id"]}"
+                        input type="submit" value="Delete" class="crud_button"
+                    div class="editbutton"
+                        a href="/objects/#{objectinfo["id"]}/edit" class="crud_button" EDIT
 
     div id="commentssection"
         h2 KOMMENTARER
@@ -21,13 +22,15 @@ div id="detailpagecontainer"
             div class="comment"
                 p class="commenttext" = "- #{comment["text"]}"
                 p = "Användare: #{comment["name"]} // Datum: #{comment["date"]}"
-                form action="deletecomment" method="POST" class="removecommentbutton"
-                    input type="hidden" name="commentid" value="#{comment["comment_id"]}"
-                    input type="submit" value="Delete" class="crud_button"
-        form action="newcomment" method="POST" class="commentform"
-            input type="hidden" name="objectid" value="#{objectinfo[0]["id"]}"
-            input type="number" name="authorid" value="1"
-            input type="text" name="commenttext" placeholder="Skriv din kommentar här!" class="commenttextbox"
-            input type="submit" value="Post"
+                - if userid == comment["author_id"] or session[:isadmin] == true
+                    form action="deletecomment" method="POST" class="removecommentbutton"
+                        input type="hidden" name="commentid" value="#{comment["comment_id"]}"
+                        input type="submit" value="Delete" class="crud_button"
+        - if session[:isadmin] != nil
+            form action="newcomment" method="POST" class="commentform"
+                input type="hidden" name="objectid" value="#{objectinfo["id"]}"
+                input type="hidden" name="authorid" value="#{userid}"
+                input type="text" name="commenttext" placeholder="Skriv din kommentar här!" class="commenttextbox"
+                input type="submit" value="Post"
 
     / - objectinfo.each do |object|

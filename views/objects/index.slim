@@ -14,8 +14,13 @@ div class="objectscontainer"
             p = "Skapare: #{object["author"]}"
             p = "Objecttyp: #{object["class"]} "
             - comments.each do |comment|
+                - p comment["object_id"] 
+                - p object["id"]
+                - p comment 
                 - if comment["object_id"] == object["id"]
                     - i += 1
+                    - p "Stämmer"
+            - p i
             p class="commentsamount" = "Kommentarer: #{i}"
             - i = 0
 

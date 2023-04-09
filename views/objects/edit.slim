@@ -3,9 +3,9 @@ div id="detailpagecontainer"
     div class="objectdetailview"
         h3 class="objecttitle" #{objectinfo[0]["name"]}
         /objects/#{objectinfo[0]["id"]}/update
-        form action="/objects/#{objectinfo[0]["id"]}/update" method="POST"
+        form action="/objects/#{objectinfo["id"]}/update" method="POST"
             p = "Mängd:" 
-            input type="number" name="quantity" value="#{objectinfo[0]["quantity"]}" class="editbox"
+            input type="number" name="quantity" value="#{objectinfo["quantity"]}" class="editbox"
             p = "Status: (Nuvarande #{objectinfo[0]["status"]})"
             select name="status" value="#{objectinfo[0]["status"]}" class="editbox"
                 option value="Tillgänglig" Tillgänglig
