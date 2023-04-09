@@ -1,4 +1,6 @@
 require 'sqlite3'
+require 'date'
+
 
 # The Model class handle database interactions for the website
 #
@@ -24,6 +26,28 @@ class Model
   # @return [Array<Hash>] An array of all comments in the database
   def get_comments
     @db.execute("SELECT * FROM comments")
+  end
+
+  # Record login attempt
+  #
+  # @param [String] The username of the user attempted to log into.
+  def record_login_attempt(username)
+    @db.execute('INSERT INTO loginattempts (username, timestamp) VALUES (?,?)', username, Time.now.strftime('%Y-%m-%d %H:%M:%S'))
+    # @db.execute[:login_attempts].insert(username: username, timestamp: Time.now)
+  end
+
+  # Returns the most recent login attempt for the specified username.
+  #
+  # @param username [String] The username to fetch the login attempt for.
+  # @return [Hash, nil] A hash representing the most recent login attempt for the specified username,
+  #   or nil if no login attempts were found for the username.
+  #
+  # The hash returned by this function contains the following keys:
+  # - :id (Integer) - The unique ID of the login attempt.
+  # - :username (String) - The username associated with the login attempt.
+  # - :timestamp (String) - The timestamp of the login attempt in the format "YYYY-MM-DD HH:MM:SS".
+  def last_login_attempt(username)
+    @db.execute("SELECT * FROM loginattempts WHERE username = ? ORDER BY timestamp DESC LIMIT 1", username).first
   end
 
   # Get all objects in a specific class from the database

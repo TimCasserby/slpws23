@@ -253,35 +253,45 @@ post('/login') do
     username = params[:username]
     password = params[:password]
     result = model.get_user_by_name(username)
-    if result != nil
-        pwdigest = result["encryptedpassword"]
-        id = result["id"]
-        loggedinusername = result["name"]
-    
-        if BCrypt::Password.new(pwdigest) == password
-            session[:id] = id
-            session[:loggedinusername] = loggedinusername
 
-            p loggedinusername
-            p session[:loggedinusername] #RETURNAR RÄTT USERNAME
+    last_login = model.last_login_attempt(username)
+    if last_login == nil || Time.now - Time.parse(last_login['timestamp']) > 10
+        if result != nil
+            pwdigest = result["encryptedpassword"]
+            id = result["id"]
+            loggedinusername = result["name"]
+        
+            if BCrypt::Password.new(pwdigest) == password
+                session[:id] = id
+                session[:loggedinusername] = loggedinusername
 
-            admin = false
-            if result != nil
-                if result["rank"] == 2
-                    admin = true
+                p loggedinusername
+                p session[:loggedinusername] #RETURNAR RÄTT USERNAME
+
+                admin = false
+                if result != nil
+                    if result["rank"] == 2
+                        admin = true
+                    end
                 end
+
+                session[:isadmin] = admin
+
+                redirect("/objects/")
+            else
+                # "FEL LÖSENORD!"
+                model.record_login_attempt(username)
+                redirect("/login")
             end
-
-            session[:isadmin] = admin
-
-            redirect("/objects/")
-            p "DU FICK RÄTT LÖSENORD"
         else
-            p "DU FICK FEL LÖSENORD"
-            "FEL LÖSENORD!"
+            "Fel användarnamn."
         end
+    elsif Time.now - Time.parse(last_login['timestamp']) < 10
+        puts "Last login timestamp: #{Time.now - Time.parse(last_login['timestamp'])}"
+        model.record_login_attempt(username)
+        "Chilla gunilla. Du kan bara försöka logga in en gång var tioende sekund."
     else
-        "Fel användarnamn."
+        raise("NÅGOT HAR GÅTT FEL MED TIDEN.")
     end
   end
 
