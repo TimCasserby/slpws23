@@ -16,7 +16,8 @@ html lang="en"
                 - if session[:isadmin] == true 
                     a href="/objects/new" class="navlink" Lägg in nytt objekt i databas 
             div id="usernav"
-                a href="/login" class="navlink" Logga in 
+                - if session[:isadmin] == nil
+                    a href="/login" class="navlink" Logga in 
                 - if session[:isadmin] != nil
                     a href="/logout" class="navlink" id="logoutbutton" Logga ut
                     - if session[:isadmin] == true
